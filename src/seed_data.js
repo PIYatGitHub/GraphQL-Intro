@@ -47,19 +47,23 @@ const posts_seed = [
 const comments_seed = [
   {
     id: "1",
-    text: "blah"
+    text: "blah",
+    author: "1"
   },
   {
     id: "2",
-    text: "pewdie pie"
+    text: "pewdie pie",
+    author: "1"
   },
   {
     id: "3",
-    text: "king kong..."
+    text: "king kong...",
+    author: "3"
   },
   {
     id: "4",
-    text: "A deep comment..."
+    text: "A deep comment...",
+    author: "3"
   }
 ];
 

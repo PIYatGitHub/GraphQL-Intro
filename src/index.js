@@ -16,6 +16,7 @@ const typeDefs = `
     email: String!
     age: Int
     posts: [Post!]!
+    comments: [Comment!]!
   }
   type Post {
     id: ID!
@@ -27,6 +28,7 @@ const typeDefs = `
   type Comment {
     id: ID!
     text: String!
+    author: User! 
   }
 `;
 
@@ -60,8 +62,16 @@ const resolvers = {
   User: {
     posts(parent, args, ctx, info){
       return posts_seed.filter((p)=>p.author === parent.id)
+    },
+    comments(parent, args, ctx, info){
+      return comments_seed.filter((c)=>c.author === parent.id)
     }
-  }
+  },
+  Comment: {
+    author(parent, args, ctx, info){
+      return user_seed.find((u)=>u.id === parent.author)
+    }
+  },
 };
 
 const server = new GraphQLServer({
