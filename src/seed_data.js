@@ -22,21 +22,21 @@ const user_seed = [
 
 const posts_seed = [
   {
-    id: "post112314",
+    id: "10",
     title: "New post",
     body: "sample post body...",
     published: false,
     author: '1'
   },
   {
-    id: "post1352",
+    id: "11",
     title: "GraphQL - in details",
     body: "Graph Ql is suupa cool - use it...",
     published: true,
     author: '2'
   },
   {
-    id: "post1",
+    id: "12",
     title: "Some awesome libraries for JS",
     body: "today we look at some pretty cool JS stuff...",
     published: true,
@@ -48,22 +48,26 @@ const comments_seed = [
   {
     id: "1",
     text: "blah",
-    author: "1"
+    author: "1",
+    post: "10"
   },
   {
     id: "2",
     text: "pewdie pie",
-    author: "1"
+    author: "1",
+    post: "10"
   },
   {
     id: "3",
     text: "king kong...",
-    author: "3"
+    author: "3",
+    post: "11"
   },
   {
     id: "4",
     text: "A deep comment...",
-    author: "3"
+    author: "3",
+    post: "12"
   }
 ];
 

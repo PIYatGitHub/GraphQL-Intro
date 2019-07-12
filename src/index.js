@@ -24,11 +24,13 @@ const typeDefs = `
     title: String!
     body: String!
     published: Boolean!
+    comments: [Comment!]!
   }
   type Comment {
     id: ID!
     text: String!
-    author: User! 
+    author: User!
+    post: Post! 
   }
 `;
 
@@ -57,6 +59,9 @@ const resolvers = {
   Post: {
     author(parent, args, ctx, info){
       return user_seed.find((u)=>u.id === parent.author)
+    },
+    comments(parent, args, ctx, info){
+      return comments_seed.filter((c)=>c.post === parent.id)
     }
   },
   User: {
@@ -70,6 +75,9 @@ const resolvers = {
   Comment: {
     author(parent, args, ctx, info){
       return user_seed.find((u)=>u.id === parent.author)
+    },
+    post(parent, args, ctx, info){
+      return posts_seed.find((p)=>p.id === parent.post)
     }
   },
 };
