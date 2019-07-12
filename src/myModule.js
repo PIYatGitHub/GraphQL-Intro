@@ -1,5 +1,7 @@
 const secret = "...>top secret message here<<<...",
-      name = "Peterr Iv. Yonkov",
+      name = "Peter Iv. Yonkov",
       location = "Sofia";
-
-export {secret, name, location as default}
+const getGreeting = (name) => {
+  return `Greetings, ${name}!`
+}
+export {secret, name, getGreeting, location as default}
