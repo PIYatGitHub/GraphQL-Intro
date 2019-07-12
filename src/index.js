@@ -24,10 +24,10 @@ const resolvers = {
       return 27
     },
     employed(){
-      return true
+      return false
     },
     salary(){
-      return 789.1
+      return null
     }
   }
 };
