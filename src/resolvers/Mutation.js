@@ -50,6 +50,16 @@ const Mutation = {
 
     return post;
   },
+  updatePost(parent, args, {db}, info){
+    const post = db.posts_seed.find((u)=>u.id === args.id);
+    if (!post) throw new Error("Post not found");
+
+    if (typeof args.data.title === 'string') post.title = args.data.title;
+    if (typeof args.data.body === 'string') post.body = args.data.body;
+    if (typeof args.data.published === 'boolean') post.published = args.data.published;
+
+    return post
+  },
   deletePost(parent, args, {db}, info){
     const postInex = db.posts_seed.findIndex((p)=>p.id === args.id);
     if (postInex === -1) throw new Error("Post not found");
@@ -69,6 +79,13 @@ const Mutation = {
     db.comments_seed.push(comment);
 
     return comment;
+  },
+  updateComment(parent, args, {db}, info){
+    const comment = db.comments_seed.find((u)=>u.id === args.id);
+    if (!comment) throw new Error("Comment not found");
+    if (typeof args.data.text === 'string') comment.text = args.data.text;
+
+    return comment
   },
   deleteComment(parent, args, {db}, info){
     const cmtInex = db.comments_seed.findIndex((c)=>c.id === args.id);
