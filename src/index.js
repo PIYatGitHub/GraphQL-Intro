@@ -1,5 +1,6 @@
 import {GraphQLServer} from 'graphql-yoga'
 import {user_seed, comments_seed, posts_seed} from './seed_data'
+import  uuidv4 from 'uuid/v4'
 
 //Type definitions, e.g. the app schema
 const typeDefs = `
@@ -10,6 +11,11 @@ const typeDefs = `
    posts(query: String): [Post!]!
    comments: [Comment!]!
   }
+  
+  type Mutation {
+    createUser(name: String!, email: String!, age: Int): User!
+  }
+  
   type User {
     id: ID!
     name: String!
@@ -80,6 +86,20 @@ const resolvers = {
       return posts_seed.find((p)=>p.id === parent.post)
     }
   },
+  Mutation: {
+    createUser(parent, args, ctx, info){
+      const emailTaken = user_seed.some((u)=>u.email === args.email);
+      if (emailTaken) throw new Error("The email is already taken!");
+      const user = {
+        id: uuidv4(),
+        name: args.name,
+        email: args.email,
+        age: args.age
+      };
+      user_seed.push(user);
+      return user;
+    }
+  }
 };
 
 const server = new GraphQLServer({
