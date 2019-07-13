@@ -94,9 +94,7 @@ const resolvers = {
       if (emailTaken) throw new Error("The email is already taken!");
       const user = {
         id: uuidv4(),
-        name: args.name,
-        email: args.email,
-        age: args.age
+        ...args
       };
       user_seed.push(user);
       return user;
@@ -106,10 +104,7 @@ const resolvers = {
       if (!userExists) throw new Error("The user does not exist!");
       const post = {
         id: uuidv4(),
-        title: args.title,
-        body: args.body,
-        published: args.published,
-        author: args.author
+        ...args
       };
       posts_seed.push(post);
       return post;
@@ -121,9 +116,7 @@ const resolvers = {
       if (!postExists) throw new Error("The post does not exist!");
       const comment = {
         id: uuidv4(),
-        text: args.text,
-        author: args.author,
-        post: args.post
+        ...args
       };
       comments_seed.push(comment);
       return comment;
