@@ -88,9 +88,9 @@ const typeDefs = `
     createUser(data: CreateUserInput): User!
     deleteUser(id: ID!): User!
     createPost(data: CreatePostInput): Post!
-    deletePost(data: CreatePostInput): Post!
+    deletePost(id: ID!): Post!
     createComment(data: CreateCommentInput): Comment!
-    deleteComment(data: CreateCommentInput): Comment!
+    deleteComment(id: ID!): Comment!
   }
   
   input CreateUserInput {
@@ -216,7 +216,15 @@ const resolvers = {
         ...args.data
       };
       posts_seed.push(post);
+
       return post;
+    },
+    deletePost(parent, args, ctx, info){
+      const postInex = posts_seed.findIndex((p)=>p.id === args.id);
+      if (postInex === -1) throw new Error("Post not found");
+      comments_seed = comments_seed.filter((c)=>c.post !== args.id);
+
+      return posts_seed.splice(postInex, 1)[0];
     },
     createComment(parent, args, ctx, info){
       const userExists = user_seed.some((u)=>u.id === args.data.author),
@@ -228,8 +236,15 @@ const resolvers = {
         ...args.data
       };
       comments_seed.push(comment);
+
       return comment;
-    }
+    },
+    deleteComment(parent, args, ctx, info){
+      const cmtInex = comments_seed.findIndex((c)=>c.id === args.id);
+      if (cmtInex === -1) throw new Error("Comment not found");
+
+      return comments_seed.splice(cmtInex, 1)[0];
+    },
   }
 };
 
