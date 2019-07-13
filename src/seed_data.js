@@ -1,6 +1,6 @@
 //This file contains some dummy data to get you up and running before you get the db sorted
 //out. Also you may want to use it for tests. Enjoy!
-const user_seed = [
+let user_seed = [
   {
     id: "1",
     name: "Pesho",
@@ -20,7 +20,7 @@ const user_seed = [
   }
 ];
 
-const posts_seed = [
+let posts_seed = [
   {
     id: "10",
     title: "New post",
@@ -44,7 +44,7 @@ const posts_seed = [
   }
 ];
 
-const comments_seed = [
+let comments_seed = [
   {
     id: "1",
     text: "blah",
