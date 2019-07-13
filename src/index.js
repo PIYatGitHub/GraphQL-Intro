@@ -13,10 +13,29 @@ const typeDefs = `
   }
   
   type Mutation {
-    createUser(name: String!, email: String!, age: Int): User!
-    createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-    createComment(text: String!, author: String!, post: String!): Comment!
+    createUser(data: CreateUserInput): User!
+    createPost(data: CreatePostInput): Post!
+    createComment(data: CreateCommentInput): Comment!
   }
+  
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
+  } 
+  
+  input CreatePostInput {
+    title: String!
+    body: String!
+    published: Boolean!
+    author: ID!
+  } 
+  
+  input CreateCommentInput {
+   text: String!
+   author: String!
+   post: String!
+  } 
   
   type User {
     id: ID!
@@ -90,33 +109,33 @@ const resolvers = {
   },
   Mutation: {
     createUser(parent, args, ctx, info){
-      const emailTaken = user_seed.some((u)=>u.email === args.email);
+      const emailTaken = user_seed.some((u)=>u.email === args.data.email);
       if (emailTaken) throw new Error("The email is already taken!");
       const user = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
       user_seed.push(user);
       return user;
     },
     createPost(parent, args, ctx, info){
-      const userExists = user_seed.some((u)=>u.id === args.author);
+      const userExists = user_seed.some((u)=>u.id === args.data.author);
       if (!userExists) throw new Error("The user does not exist!");
       const post = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
       posts_seed.push(post);
       return post;
     },
     createComment(parent, args, ctx, info){
-      const userExists = user_seed.some((u)=>u.id === args.author),
-            postExists = posts_seed.some((p)=>p.id === args.post && p.published);
+      const userExists = user_seed.some((u)=>u.id === args.data.author),
+            postExists = posts_seed.some((p)=>p.id === args.data.post && p.published);
       if (!userExists) throw new Error("The user does not exist!");
       if (!postExists) throw new Error("The post does not exist!");
       const comment = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
       comments_seed.push(comment);
       return comment;
