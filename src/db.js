@@ -1,11 +1,12 @@
-//This file contains some dummy data to get you up and running before you get the db sorted
-//out. Also you may want to use it for tests. Enjoy!
-let user_seed = [
+// the three arrays to be found below serve as a
+// set of dummy data, so that you may use them at all times to code it up...
+//Enjoy!
+const user_seed = [
   {
     id: "1",
     name: "Pesho",
     email: "pesho@example.com",
-    age:27
+    age:28
   },
   {
     id: "2",
@@ -20,7 +21,7 @@ let user_seed = [
   }
 ];
 
-let posts_seed = [
+const posts_seed = [
   {
     id: "10",
     title: "New post",
@@ -44,7 +45,7 @@ let posts_seed = [
   }
 ];
 
-let comments_seed = [
+const comments_seed = [
   {
     id: "1",
     text: "blah",
@@ -71,4 +72,10 @@ let comments_seed = [
   }
 ];
 
-export {user_seed, comments_seed, posts_seed}
+const db = {
+  user_seed,
+  posts_seed,
+  comments_seed
+};
+
+export {db as default}
