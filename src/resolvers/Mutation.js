@@ -67,7 +67,7 @@ const Mutation = {
 
     return db.posts_seed.splice(postInex, 1)[0];
   },
-  createComment(parent, args, {db}, info){
+  createComment(parent, args, {db, pubsub}, info){
     const userExists = db.user_seed.some((u)=>u.id === args.data.author),
       postExists = db.posts_seed.some((p)=>p.id === args.data.post && p.published);
     if (!userExists) throw new Error("The user does not exist");
@@ -77,6 +77,7 @@ const Mutation = {
       ...args.data
     };
     db.comments_seed.push(comment);
+    pubsub.publish(`comment ${args.data.post}`, {comment});
 
     return comment;
   },
