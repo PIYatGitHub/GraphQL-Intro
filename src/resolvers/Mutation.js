@@ -47,25 +47,67 @@ const Mutation = {
       ...args.data
     };
     db.posts_seed.push(post);
-    if (post.published) pubsub.publish('post', {post});
+    if (post.published) pubsub.publish('post', {
+      post: {
+        mutation: 'CREATED',
+        data: post
+      }
+    });
     return post;
   },
-  updatePost(parent, args, {db}, info){
-    const post = db.posts_seed.find((u)=>u.id === args.id);
+  updatePost(parent, args, {db, pubsub}, info){
+    const post = db.posts_seed.find((u)=>u.id === args.id),
+          original_post = {...post};
     if (!post) throw new Error("Post not found");
 
     if (typeof args.data.title === 'string') post.title = args.data.title;
     if (typeof args.data.body === 'string') post.body = args.data.body;
-    if (typeof args.data.published === 'boolean') post.published = args.data.published;
+    if (typeof args.data.published === 'boolean') {
+      post.published = args.data.published;
+      if (original_post.published && !post.published) {
+        //deleted event
+        pubsub.publish('post', {
+          post: {
+            mutation: 'DELETED',
+            data: original_post
+          }
+        });
+      } else if(!original_post.published && post.published) {
+        // created event
+        pubsub.publish('post', {
+          post: {
+            mutation: 'CREATED',
+            data: post
+          }
+        });
+      }
+    } else if (post.published) {
+      //updated event
+      pubsub.publish('post', {
+        post: {
+          mutation: 'UPDATED',
+          data: post
+        }
+      });
+    }
 
     return post
   },
-  deletePost(parent, args, {db}, info){
+  deletePost(parent, args, {db, pubsub}, info){
     const postInex = db.posts_seed.findIndex((p)=>p.id === args.id);
+    let deletedPost = {};
     if (postInex === -1) throw new Error("Post not found");
     db.comments_seed = db.comments_seed.filter((c)=>c.post !== args.id);
+    deletedPost = db.posts_seed.splice(postInex, 1)[0];
 
-    return db.posts_seed.splice(postInex, 1)[0];
+    if (deletedPost.published) pubsub.publish('post', {
+      post: {
+        mutation: 'DELETED',
+        data: deletedPost
+      }
+    });
+
+    return deletedPost;
   },
   createComment(parent, args, {db, pubsub}, info){
     const userExists = db.user_seed.some((u)=>u.id === args.data.author),
