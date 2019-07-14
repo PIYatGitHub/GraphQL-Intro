@@ -39,7 +39,7 @@ const Mutation = {
 
     return db.user_seed.splice(userInex, 1)[0];
   },
-  createPost(parent, args, {db}, info){
+  createPost(parent, args, {db, pubsub}, info){
     const userExists = db.user_seed.some((u)=>u.id === args.data.author);
     if (!userExists) throw new Error("The user does not exist");
     const post = {
@@ -47,7 +47,7 @@ const Mutation = {
       ...args.data
     };
     db.posts_seed.push(post);
-
+    if (post.published) pubsub.publish('post', {post});
     return post;
   },
   updatePost(parent, args, {db}, info){
